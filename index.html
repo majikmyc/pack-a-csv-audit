@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pack A — 10-in-1 Client-Side CSV &amp; Billing Audit Suite (Zero-Custody Edition)</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background-color: #090d16; color: #f1f5f9; }
+    code, pre, textarea.mono { font-family: 'JetBrains Mono', monospace; }
+    .glass-card { background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(51, 65, 85, 0.8); }
+    .tab-active { background: #0284c7; color: #ffffff; border-color: #38bdf8; }
+    .tab-inactive { background: #0f172a; color: #94a3b8; border-color: #1e293b; }
+    .tab-inactive:hover { color: #e2e8f0; border-color: #334155; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-sky-500 selection:text-white">
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-5 right-5 z-50 hidden px-4 py-3 rounded-lg bg-emerald-600 text-white text-sm font-semibold shadow-xl border border-emerald-400">
+    <span id="toastMsg">Action completed!</span>
+  </div>
+
+  <!-- Top Header -->
+  <header class="border-b border-slate-800 bg-slate-950/90 sticky top-0 z-30 backdrop-blur">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+      <div>
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="px-2 py-0.5 text-xs font-bold uppercase tracking-wider rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">100% Client-Side Browser Execution</span>
+          <span class="px-2 py-0.5 text-xs font-medium rounded bg-sky-500/15 text-sky-400 border border-sky-500/30">Zero Server Uploads • MIT As-Is Liability Shield</span>
+        </div>
+        <h1 class="text-lg sm:text-xl font-bold text-white mt-1">Pack A — 10-in-1 E-Commerce, Accounting &amp; CRM CSV Audit Suite</h1>
+      </div>
+      <div class="flex items-center gap-2">
+        <label class="flex items-center gap-2 text-xs text-slate-300 bg-slate-900 px-3 py-1.5 rounded-lg border border-slate-700 cursor-pointer">
+          <input id="chkLiability" type="checkbox" checked class="accent-emerald-500">
+          <span>I accept the As-Is Technical Template Disclaimer ($0 Liability Cap)</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Tool Tabs -->
+    <div class="max-w-7xl mx-auto px-4 pb-2 flex flex-wrap gap-1.5">
+      <button type="button" data-tab="tpl" class="nav-tab tab-active px-3 py-1.5 rounded-lg text-xs font-semibold border transition">
+        1. #17: 3PL Invoice Overcharge Auditor
+      </button>
+      <button type="button" data-tab="qbo" class="nav-tab tab-inactive px-3 py-1.5 rounded-lg text-xs font-semibold border transition">
+        2. #20: QBO Missing Bank-Feed Diff
+      </button>
+      <button type="button" data-tab="stripefx" class="nav-tab tab-inactive px-3 py-1.5 rounded-lg text-xs font-semibold border transition">
+        3. #30: Stripe Multi-Currency FX Splitter
+      </button>
+      <button type="button" data-tab="vamp" class="nav-tab tab-inactive px-3 py-1.5 rounded-lg text-xs font-semibold border transition">
+        4. #38: Stripe VAMP &amp; Verifi RDR Cap Ticket
+      </button>
+      <button type="button" data-tab="xero" class="nav-tab tab-inactive px-3 py-1.5 rounded-lg text-xs font-semibold border transition">
+        5. #39/#53: Xero Cutoff &amp; UK Late Interest
+      </button>
+      <button type="button" data-tab="uuid" class="nav-tab tab-inactive px-3 py-1.5 rounded-lg text-xs font-semibold border transition">
+        6. #55: TwentyCRM / Supabase UUIDv4 Remapper
+      </button>
+      <button type="button" data-tab="shopify10k" class="nav-tab tab-inactive px-3 py-1.5 rounded-lg text-xs font-semibold border transition">
+        7. #66: Shopify 10k Ref &amp; Handle Sanitizer
+      </button>
+      <button type="button" data-tab="bubble" class="nav-tab tab-inactive px-3 py-1.5 rounded-lg text-xs font-semibold border transition">
+        8. #72: Bubble Collision &amp; Bulk Chunker
+      </button>
+      <button type="button" data-tab="xerostripe" class="nav-tab tab-inactive px-3 py-1.5 rounded-lg text-xs font-semibold border transition">
+        9. #73: Xero-Stripe Fee Sign Inverter
+      </button>
+      <button type="button" data-tab="hubspot" class="nav-tab tab-inactive px-3 py-1.5 rounded-lg text-xs font-semibold border transition">
+        10. #74: HubSpot Search JSON-to-CSV Flattener
+      </button>
+    </div>
+  </header>
+
+  <main class="max-w-7xl w-full mx-auto px-4 py-6 flex-1 space-y-6">
+
+    <!-- TOOL 1: #17 3PL INVOICE VS SHOPIFY ORDER AUDITOR -->
+    <section id="view-tpl" class="space-y-4">
+      <div class="glass-card rounded-xl p-5 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-3">
+          <div>
+            <h2 class="text-base font-bold text-white">#17 — 3PL Warehouse Invoice vs. Actual Order Weight/Pick-Pack Discrepancy Auditor</h2>
+            <p class="text-xs text-slate-400">Catches duplicate pick-and-pack rows, inflated dimensional-weight tiers, and phantom pallet fees locally in your browser.</p>
+          </div>
+          <div class="flex gap-2">
+            <button type="button" id="btnLoadSample3pl" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-800 hover:bg-slate-700 text-sky-300 border border-slate-700">Load Sample Data</button>
+            <button type="button" id="btnRun3plAudit" class="px-4 py-1.5 rounded-lg text-xs font-bold bg-sky-600 hover:bg-sky-500 text-white">Run 3PL Overcharge Audit</button>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div>
+            <label for="txt3plOrders" class="block text-xs font-bold text-slate-300 mb-1">Shopify / Actual Orders CSV (order_id,actual_oz,expected_pick_fee)</label>
+            <textarea id="txt3plOrders" class="mono w-full h-44 rounded-lg bg-slate-950 border border-slate-800 p-3 text-xs text-slate-200"></textarea>
+          </div>
+          <div>
+            <label for="txt3plInvoice" class="block text-xs font-bold text-slate-300 mb-1">3PL Billed Invoice CSV (order_id,billed_oz,billed_pick_fee,shipping_surcharge)</label>
+            <textarea id="txt3plInvoice" class="mono w-full h-44 rounded-lg bg-slate-950 border border-slate-800 p-3 text-xs text-slate-200"></textarea>
+          </div>
+        </div>
+        <div class="space-y-2">
+          <div class="flex items-center justify-between">
+            <span id="lbl3plSummary" class="text-xs font-bold text-emerald-400">Audit Discrepancy Report</span>
+            <div class="flex gap-2">
+              <button type="button" id="btnCopy3pl" class="px-3 py-1 rounded text-xs font-semibold bg-slate-800 text-emerald-400 border border-slate-700">Copy Refund Claim</button>
+              <button type="button" id="btnDl3pl" class="px-3 py-1 rounded text-xs font-semibold bg-emerald-600 text-white">Download Claim CSV</button>
+            </div>
+          </div>
+          <textarea id="out3plReport" readonly class="mono w-full h-44 rounded-lg bg-slate-950 border border-slate-800 p-3 text-xs text-emerald-400"></textarea>
+        </div>
+      </div>
+    </section>
+
+    <!-- TOOL 2: #20 QBO MISSING BANK-FEED TRANSACTION DIFF -->
+    <section id="view-qbo" class="hidden space-y-4">
+      <div class="glass-card rounded-xl p-5 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-3">
+          <div>
+            <h2 class="text-base font-bold text-white">#20 — QuickBooks Online (QBO) Missing Bank-Feed Transaction Diff &amp; Clean Import Generator</h2>
+            <p class="text-xs text-slate-400">Compares your raw bank CSV against your partially-synced QBO export and outputs ONLY the missing rows in QBO 3-column import format (Date,Description,Amount).</p>
+          </div>
+          <button type="button" id="btnRunQboDiff" class="px-4 py-1.5 rounded-lg text-xs font-bold bg-sky-600 hover:bg-sky-500 text-white">Isolate Missing Bank Rows</button>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div>
+            <label for="txtBankRaw" class="block text-xs font-bold text-slate-300 mb-1">Raw Bank Statement CSV (Date,Description,Amount)</label>
+            <textarea id="txtBankRaw" class="mono w-full h-44 rounded-lg bg-slate-950 border border-slate-800 p-3 text-xs text-slate-200">2026-10-25,REGIONS ACH DEPOSIT STRIPE,1420.50
+2026-10-26,CLOUDFLARE INC,-25.00
+2026-10-27,GUSTO PAYROLL DEBIT,-3100.00
+2026-10-28,HOME DEPOT #402,-84.12
+2026-10-29,CLIENT WIRE INV-104,2500.00</textarea>
+          </div>
+          <div>
+            <label for="txtQboSynced" class="block text-xs font-bold text-slate-300 mb-1">Partially Synced QBO Ledger CSV (Date,Description,Amount)</label>
+            <textarea id="txtQboSynced" class="mono w-full h-44 rounded-lg bg-slate-950 border border-slate-800 p-3 text-xs text-slate-200">2026-10-25,REGIONS ACH DEPOSIT STRIPE,1420.50
+2026-10-28,HOME DEPOT #402,-84.12</textarea>
+          </div>
+        </div>
+        <div class="space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-emerald-400">Deduplicated Missing Transactions (Ready for QBO Upload)</span>
+            <button type="button" id="btnDlQboCsv" class="px-3 py-1 rounded text-xs font-semibold bg-emerald-600 text-white">Download QBO_Missing_Import.csv</button>
+          </div>
+          <textarea id="outQboDiff" readonly class="mono w-full h-40 rounded-lg bg-slate-950 border border-slate-800 p-3 text-xs text-emerald-400"></textarea>
+        </div>
+      </div>
+    </section>
+
+    <!-- TOOL 3: #30 STRIPE MULTI-CURRENCY FX PAYOUT CALCULATOR -->
+    <section id="view-stripefx" class="hidden space-y-4">
+      <div class="glass-card rounded-xl p-5 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-3">
+          <div>
+            <h2 class="text-base font-bold text-white">#30 — Stripe Multi-Currency FX Payout Variance &amp; QBO Journal Entry Generator</h2>
+            <p class="text-xs text-slate-400">Reconciles the exact penny difference between Stripe's settlement FX rate and QuickBooks/Xero's daily spot FX rate.</p>
+          </div>
+          <button type="button" id="btnCalcFx" class="px-4 py-1.5 rounded-lg text-xs font-bold bg-sky-600 hover:bg-sky-500 text-white">Calculate FX Variance Journal</button>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+          <div>
+            <label for="fxOrigAmount" class="block text-xs font-semibold text-slate-300 mb-1">Foreign Gross Sale (e.g. CAD)</label>
+            <input id="fxOrigAmount" type="number" step="0.01" value="5000.00" class="w-full rounded-lg bg-slate-950 border border-slate-800 px-3 py-2 text-xs text-white">
+          </div>
+          <div>
+            <label for="fxStripePayoutUsd" class="block text-xs font-semibold text-slate-300 mb-1">Actual Stripe USD Payout Net</label>
+            <input id="fxStripePayoutUsd" type="number" step="0.01" value="3512.40" class="w-full rounded-lg bg-slate-950 border border-slate-800 px-3 py-2 text-xs text-white">
+          </div>
+          <div>
+            <label for="fxStripeFeeUsd" class="block text-xs font-semibold text-slate-300 mb-1">Stripe Processing + FX Fee (USD)</label>
+            <input id="fxStripeFeeUsd" type="number" step="0.01" value="142.60" class="w-full rounded-lg bg-slate-950 border border-slate-800 px-3 py-2 text-xs text-white">
+          </div>
+          <div>
+            <label for="fxQboSpotRate" class="block text-xs font-semibold text-slate-300 mb-1">QBO / Xero Spot Rate (CAD-&gt;USD)</label>
+            <input id="fxQboSpotRate" type="number" step="0.0001" value="0.7380" class="w-full rounded-lg bg-slate-950 border border-slate-800 px-3 py-2 text-xs text-white">
+          </div>
+        </div>
+        <textarea id="outFxJournal" readonly class="mono w-full h-44 rounded-lg bg-slate-950 border border-slate-800 p-3 text-xs text-emerald-400"></textarea>
+      </div>
+    </section>
+
+    <!-- TOOL 4: #38 STRIPE VAMP 0.9% & VERIFI RDR THRESHOLD TICKET GENERATOR -->
+    <section id="view-vamp" class="hidden space-y-4">
+      <div class="glass-card rounded-xl p-5 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-3">
+          <div>
+            <h2 class="text-base font-bold text-white">#38 — Stripe Visa VAMP (0.9%) Buffer Calculator &amp; Hidden Verifi RDR Cap Ticket Generator</h2>
+            <p class="text-xs text-slate-400">Calculates how many disputes you can fight manually before hitting Visa's 0.9% VAMP threshold and writes the exact ticket to stop Stripe Verifi RDR from auto-refunding delivered orders.</p>
+          </div>
+          <button type="button" id="btnCalcVamp" class="px-4 py-1.5 rounded-lg text-xs font-bold bg-sky-600 hover:bg-sky-500 text-white">Generate VAMP Analysis &amp; Ticket</button>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div>
+            <label for="vampMonthlyTx" class="block text-xs font-semibold text-slate-300 mb-1">Monthly Visa Card Transactions</label>
+            <input id="vampMonthlyTx" type="number" value="1200" class="w-full rounded-lg bg-slate-950 border border-slate-800 px-3 py-2 text-xs text-white">
+          </div>
+          <div>
+            <label for="vampCurrentDisputes" class="block text-xs font-semibold text-slate-300 mb-1">Current Monthly Disputes + TC40</label>
+            <input id="vampCurrentDisputes" type="number" value="4" class="w-full rounded-lg bg-slate-950 border border-slate-800 px-3 py-2 text-xs text-white">
+          </div>
+          <div>
+            <label for="vampRdrCap" class="block text-xs font-semibold text-slate-300 mb-1">Desired Max RDR Auto-Refund Ceiling ($)</label>
+            <input id="vampRdrCap" type="number" value="25" class="w-full rounded-lg bg-slate-950 border border-slate-800 px-3 py-2 text-xs text-white">
+          </div>
+        </div>
+        <div class="flex justify-end">
+          <button type="button" id="btnCopyVampTicket" class="px-3 py-1 rounded text-xs font-semibold bg-emerald-600 text-white">Copy Stripe Support Ticket</button>
+        </div>
+        <textarea id="outVampTicket" readonly class="mono w-full h-48 rounded-lg bg-slate-950 border border-slate-800 p-3 text-xs text-emerald-400"></textarea>
+      </div>
+    </section>
+
+    <!-- TOOL 5: #39/#53 XERO CUTOFF & UK STATUTORY LATE-PAYMENT INTEREST CALCULATOR -->
+    <section id="view-xero" class="hidden space-y-4">
+      <div class="glass-card rounded-xl p-5 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-3">
+          <div>
+            <h2 class="text-base font-bold text-white">#39 &amp; #53 — UK Statutory Late-Payment Interest (8% + BoE Base) &amp; AP Escalation Notice</h2>
+            <p class="text-xs text-slate-400">Computes statutory interest + fixed £40/£70/£100 recovery compensation under the UK Late Payment of Commercial Debts Act and drafts the Accounts Payable notice.</p>
+          </div>
+          <button type="button" id="btnCalcUkInterest" class="px-4 py-1.5 rounded-lg text-xs font-bold bg-sky-600 hover:bg-sky-500 text-white">Calculate Statutory Claim</button>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+          <div>
+            <label for="ukInvAmount" class="block text-xs font-semibold text-slate-300 mb-1">Overdue Invoice Amount (£ GBP)</label>
+            <input id="ukInvAmount" type="number" step="0.01" value="2450.00" class="w-full rounded-lg bg-slate-950 border border-slate-800 px-3 py-2 text-xs text-white">
+          </div>
+          <div>
+            <label for="ukDaysLate" class="block text-xs font-semibold text-slate-300 mb-1">Days Overdue Past Term</label>
+            <input id="ukDaysLate" type="number" value="45" class="w-full rounded-lg bg-slate-950 border border-slate-800 px-3 py-2 text-xs text-white">
+          </div>
+          <div>
+            <label for="ukBoeRate" class="block text-xs font-semibold text-slate-300 mb-1">BoE Base Rate (%)</label>
+            <input id="ukBoeRate" type="number" step="0.25" value="4.75" class="w-full rounded-lg bg-slate-950 border border-slate-800 px-3 py-2 text-xs text-white">
+          </div>
+          <div>
+            <label for="ukPoNum" class="block text-xs font-semibold text-slate-300 mb-1">Invoice &amp; PO Reference</label>
+            <input id="ukPoNum" type="text" value="INV-2026-089 (PO #4412)" class="w-full rounded-lg bg-slate-950 border border-slate-800 px-3 py-2 text-xs text-white">
+          </div>
+        </div>
+        <textarea id="outUkNotice" readonly class="mono w-full h-44 rounded-lg bg-slate-950 border border-slate-800 p-3 text-xs text-emerald-400"></textarea>
+      </div>
+    </section>
+
+    <!-- TOOL 6: #55 TWENTYCRM / SUPABASE CSV-TO-UUIDV4 RELATIONAL REMAPPER -->
+    <section id="view-uuid" class="hidden space-y-4">
+      <div class="glass-card rounded-xl p-5 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-3">
+          <div>
+            <h2 class="text-base font-bold text-white">#55 — TwentyCRM &amp; Supabase Deterministic CSV-to-UUIDv4 Foreign-Key Remapper</h2>
+            <p class="text-xs text-slate-400">Fixes <code>GRAPHQL_VALIDATION_FAILED (Invalid UUID)</code> by deterministically mapping legacy integer IDs (e.g. <code>101</code>) across parent and child CSV columns into valid RFC-4122 v4 UUIDs.</p>
+          </div>
+          <div class="flex gap-2">
+            <button type="button" id="btnRunUuidMap" class="px-4 py-1.5 rounded-lg text-xs font-bold bg-sky-600 hover:bg-sky-500 text-white">Remap IDs to UUIDv4</button>
+            <button type="button" id="btnDlUuidCsv" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-emerald-600 text-white">Download UUID_Cleaned.csv</button>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div>
+            <label for="txtUuidIn" class="block text-xs font-bold text-slate-300 mb-1">Legacy CRM CSV (id,company_id,name,email)</label>
+            <textarea id="txtUuidIn" class="mono w-full h-44 rounded-lg bg-slate-950 border border-slate-800 p-3 text-xs text-slate-200">id,company_id,name,email
+1,501,Alice Thornton,alice@acme.co.uk
+2,501,Bob Vance,bob@acme.co.uk
+3,502,Clara Oswald,clara@tardis.io</textarea>
+          </div>
+          <div>
+            <label for="outUuidCsv" class="block text-xs font-bold text-emerald-400 mb-1">UUIDv4-Compliant CSV Output (Preserves Relational Links!)</label>
+            <textarea id="outUuidCsv" readonly class="mono w-full h-44 rounded-lg bg-slate-950 border border-slate-800 p-3 text-xs text-emerald-400"></textarea>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- TOOL 7: #66 SHOPIFY 10K FILE REFERENCE SHARDER & HANDLE SANITIZER -->
+    <section id="view-shopify10k" class="hidden space-y-4">
+      <div class="glass-card rounded-xl p-5 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-3">
+          <div>
+            <h2 class="text-base font-bold text-white">#66 — Shopify CSV 10,000 File-Reference Sharder &amp; Fulfillment/Inventory Handle Sanitizer</h2>
+            <p class="text-xs text-slate-400">Prevents "Line 2: Validation failed: Cannot add more than 10000 references to a file" and normalizes Variant Fulfillment Service / Inventory Policy handles.</p>
+          </div>
+          <div class="flex gap-2">
+            <button type="button" id="btnRunShopifySanitize" class="px-4 py-1.5 rounded-lg text-xs font-bold bg-sky-600 hover:bg-sky-500 text-white">Sanitize &amp; Shard Shopify CSV</button>
+            <button type="button" id="btnDlShopifyCsv" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white">Download Clean Shopify CSV</button>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div>
+            <label for="txtShopifyIn" class="block text-xs font-bold text-slate-300 mb-1">Raw Shopify Product CSV (Handle,Variant Fulfillment Service,Variant Inventory Policy,Image Src)</label>
+            <textarea id="txtShopifyIn" class="mono w-full h-44 rounded-lg bg-slate-950 border border-slate-800 p-3 text-xs text-slate-200">Handle,Variant Fulfillment Service,Variant Inventory Policy,Image Src
+tee-blk,Manual,Deny,https://cdn.shopify.com/s/files/1/placeholder.png
+tee-wht,MANUAL ,CONTINUE,https://cdn.shopify.com/s/files/1/placeholder.png
+tee-red,Custom Warehouse,Allow,https://cdn.shopify.com/s/files/1/placeholder.png</textarea>
+          </div>
+          <div>
+            <label for="outShopifyCsv" class="block text-xs font-bold text-emerald-400 mb-1">Sanitized &amp; Sharded Output CSV</label>
+            <textarea id="outShopifyCsv" readonly class="mono w-full h-44 rounded-lg bg-slate-950 border border-slate-800 p-3 text-xs text-emerald-400"></textarea>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TOOL 8: #72 BUBBLE WORKFLOW COLLISION AUDITOR & BULK API CHUNKER -->
+    <section id="view-bubble" class="hidden space-y-4">
+      <div class="glass-card rounded-xl p-5 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-3">
+          <div>
+            <h2 class="text-base font-bold text-white">#72 — Bubble Webhook/Trigger Collision Auditor &amp; Bulk Data API NDJSON Chunker</h2>
+            <p class="text-xs text-slate-400">Detects undocumented trigger-vs-endpoint naming collisions causing "Workflow not Found", strips /version-test &amp; /initialize, and converts CSVs to newline-delimited JSON for Bubble Bulk API.</p>
+          </div>
+          <button type="button" id="btnRunBubbleAudit" class="px-4 py-1.5 rounded-lg text-xs font-bold bg-sky-600 hover:bg-sky-500 text-white">Audit Bubble Config &amp; Build NDJSON</button>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div>
+            <label for="txtBubbleIn" class="block text-xs font-bold text-slate-300 mb-1">Webhook URL + Trigger/Endpoint Names JSON</label>
+            <textarea id="txtBubbleIn" class="mono w-full h-44 rounded-lg bg-slate-950 border border-slate-800 p-3 text-xs text-slate-200">{
+  "webhook_url": "https://myapp.bubbleapps.io/version-test/api/1.1/wf/invoice/initialize",
+  "database_triggers": ["invoice", "user_signup"],
+  "api_workflows": ["invoice", "stripe_payout"],
+  "sample_rows": [{"email": "a@b.com", "plan": "pro"}, {"email": "c@d.com", "plan": "starter"}]
+}</textarea>
+          </div>
+          <div>
+            <label for="outBubbleReport" class="block text-xs font-bold text-emerald-400 mb-1">Collision Audit + Clean Live Webhook URL + Bulk API NDJSON</label>
+            <textarea id="outBubbleReport" readonly class="mono w-full h-44 rounded-lg bg-slate-950 border border-slate-800 p-3 text-xs text-emerald-400"></textarea>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TOOL 9: #73 XERO-STRIPE STATEMENT SPLITTER & FEE SIGN INVERTER -->
+    <section id="view-xerostripe" class="hidden space-y-4">
+      <div class="glass-card rounded-xl p-5 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-3">
+          <div>
+            <h2 class="text-base font-bold text-white">#73 — Xero-Stripe Off-Invoice Statement Splitter &amp; Fee-Sign Inverter</h2>
+            <p class="text-xs text-slate-400">Automatically splits gross Stripe charges and fees into separate Xero statement lines with negative charge fees and positive refund fee adjustments.</p>
+          </div>
+          <div class="flex gap-2">
+            <button type="button" id="btnRunXeroStripe" class="px-4 py-1.5 rounded-lg text-xs font-bold bg-sky-600 hover:bg-sky-500 text-white">Convert Stripe CSV for Xero</button>
+            <button type="button" id="btnDlXeroStripe" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white">Download Xero Bank CSV</button>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div>
+            <label for="txtXeroStripeIn" class="block text-xs font-bold text-slate-300 mb-1">Raw Stripe Balance CSV (Created,Email,Gross,Fee,Type,Source)</label>
+            <textarea id="txtXeroStripeIn" class="mono w-full h-44 rounded-lg bg-slate-950 border border-slate-800 p-3 text-xs text-slate-200">2026-11-05,buyer1@shop.co.uk,120.00,3.78,charge,ch_3Qabc1
+2026-11-06,buyer2@shop.co.uk,-40.00,-1.10,refund,re_3Qabc2</textarea>
+          </div>
+          <div>
+            <label for="outXeroStripeCsv" class="block text-xs font-bold text-emerald-400 mb-1">Xero-Ready Bank Statement CSV (Date,Payee,Description,Amount,Reference)</label>
+            <textarea id="outXeroStripeCsv" readonly class="mono w-full h-44 rounded-lg bg-slate-950 border border-slate-800 p-3 text-xs text-emerald-400"></textarea>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TOOL 10: #74 HUBSPOT SEARCH API JSON-TO-CSV FLATTENER -->
+    <section id="view-hubspot" class="hidden space-y-4">
+      <div class="glass-card rounded-xl p-5 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-3">
+          <div>
+            <h2 class="text-base font-bold text-white">#74 — HubSpot /crm/v3/objects/contacts/search JSON-to-CSV Deduplicating Flattener</h2>
+            <p class="text-xs text-slate-400">Converts nested HubSpot Search API JSON responses (filtered by ListId) into flat, deduplicated CSVs without hitting the 30/day Async Export API cap.</p>
+          </div>
+          <div class="flex gap-2">
+            <button type="button" id="btnRunHubspotFlatten" class="px-4 py-1.5 rounded-lg text-xs font-bold bg-sky-600 hover:bg-sky-500 text-white">Flatten HubSpot JSON to CSV</button>
+            <button type="button" id="btnDlHubspotCsv" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white">Download HubSpot CSV</button>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div>
+            <label for="txtHubspotIn" class="block text-xs font-bold text-slate-300 mb-1">HubSpot Search API JSON Payload</label>
+            <textarea id="txtHubspotIn" class="mono w-full h-44 rounded-lg bg-slate-950 border border-slate-800 p-3 text-xs text-slate-200">{
+  "results": [
+    {"id": "101", "properties": {"email": "ops@acme.io", "firstname": "Dana", "lifecyclestage": "customer"}},
+    {"id": "102", "properties": {"email": "cto@beta.co", "firstname": "Liam", "lifecyclestage": "lead"}}
+  ]
+}</textarea>
+          </div>
+          <div>
+            <label for="outHubspotCsv" class="block text-xs font-bold text-emerald-400 mb-1">Flattened &amp; Deduplicated Contacts CSV</label>
+            <textarea id="outHubspotCsv" readonly class="mono w-full h-44 rounded-lg bg-slate-950 border border-slate-800 p-3 text-xs text-emerald-400"></textarea>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    let toastTimer = null;
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      const m = document.getElementById('toastMsg');
+      m.textContent = msg;
+      t.classList.remove('hidden');
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => t.classList.add('hidden'), 2500);
+    }
+
+    function checkDisclaimer() {
+      const ok = document.getElementById('chkLiability').checked;
+      if (!ok) {
+        showToast('Please check the As-Is Technical Template Disclaimer box at the top first.');
+      }
+      return ok;
+    }
+
+    function copyText(text, label) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try {
+        document.execCommand('copy');
+        showToast('Copied ' + label + '!');
+      } catch (e) {}
+      document.body.removeChild(ta);
+    }
+
+    function downloadFile(filename, content) {
+      const blob = new Blob([content], { type: 'text/csv;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast('Downloaded ' + filename);
+    }
+
+    function switchTab(tabId) {
+      ['tpl', 'qbo', 'stripefx', 'vamp', 'xero', 'uuid', 'shopify10k', 'bubble', 'xerostripe', 'hubspot'].forEach(id => {
+        const el = document.getElementById('view-' + id);
+        if (el) el.classList.toggle('hidden', id !== tabId);
+      });
+      document.querySelectorAll('.nav-tab').forEach(btn => {
+        const active = btn.getAttribute('data-tab') === tabId;
+        btn.className = 'nav-tab px-3 py-1.5 rounded-lg text-xs font-semibold border transition ' + (active ? 'tab-active' : 'tab-inactive');
+      });
+    }
+
+    // Tool 1: 3PL Auditor
+    function loadSample3pl() {
+      document.getElementById('txt3plOrders').value = `order_id,actual_oz,expected_pick_fee
+ORD-1001,12,2.50
+ORD-1002,15,2.50
+ORD-1003,30,3.25
+ORD-1004,10,2.50`;
+      document.getElementById('txt3plInvoice').value = `order_id,billed_oz,billed_pick_fee,shipping_surcharge
+ORD-1001,24,4.50,3.20
+ORD-1001,24,4.50,0.00
+ORD-1002,15,2.50,0.00
+ORD-1003,64,5.75,6.40
+ORD-1004,10,4.00,0.00`;
+    }
+
+    function run3plAudit() {
+      if (!checkDisclaimer()) return;
+      const ordLines = document.getElementById('txt3plOrders').value.trim().split('\n').slice(1);
+      const invLines = document.getElementById('txt3plInvoice').value.trim().split('\n').slice(1);
+      const ordMap = {};
+      ordLines.forEach(line => {
+        const [id, oz, pick] = line.split(',').map(s => s.trim());
+        if (id) ordMap[id] = { oz: Number(oz), pick: Number(pick) };
+      });
+
+      const seenOrders = {};
+      const claims = ['order_id,discrepancy_type,expected_fee,billed_fee,overcharge_usd'];
+      let totalOvercharge = 0;
+
+      invLines.forEach(line => {
+        const [id, bOz, bPick, sur] = line.split(',').map(s => s.trim());
+        if (!id) return;
+        const bOzNum = Number(bOz || 0);
+        const bPickNum = Number(bPick || 0);
+        const surNum = Number(sur || 0);
+
+        if (seenOrders[id]) {
+          const dupCost = bPickNum + surNum;
+          totalOvercharge += dupCost;
+          claims.push(`${id},DUPLICATE_INVOICE_ROW,0.00,${dupCost.toFixed(2)},${dupCost.toFixed(2)}`);
+          return;
+        }
+        seenOrders[id] = true;
+
+        const ref = ordMap[id];
+        if (ref) {
+          if (bPickNum > ref.pick) {
+            const diff = bPickNum - ref.pick;
+            totalOvercharge += diff;
+            claims.push(`${id},PICK_PACK_OVERCHARGE,${ref.pick.toFixed(2)},${bPickNum.toFixed(2)},${diff.toFixed(2)}`);
+          }
+          if (bOzNum > ref.oz * 1.25 && surNum > 0) {
+            totalOvercharge += surNum;
+            claims.push(`${id},DIM_WEIGHT_TIER_INFLATION (${ref.oz}oz vs ${bOzNum}oz),0.00,${surNum.toFixed(2)},${surNum.toFixed(2)}`);
+          }
+        }
+      });
+
+      document.getElementById('lbl3plSummary').textContent = `Audit Complete — Total Recoverable 3PL Overcharges: $${totalOvercharge.toFixed(2)}`;
+      document.getElementById('out3plReport').value = claims.join('\n');
+    }
+
+    // Tool 2: QBO Missing Bank-Feed Diff
+    function runQboDiff() {
+      if (!checkDisclaimer()) return;
+      const rawLines = document.getElementById('txtBankRaw').value.trim().split('\n');
+      const qboLines = new Set(document.getElementById('txtQboSynced').value.trim().split('\n').map(s => s.trim()));
+      const out = ['Date,Description,Amount'];
+      rawLines.forEach(line => {
+        const clean = line.trim();
+        if (!clean || clean.toLowerCase().startsWith('date,')) return;
+        if (!qboLines.has(clean)) {
+          out.push(clean);
+        }
+      });
+      document.getElementById('outQboDiff').value = out.join('\n');
+    }
+
+    // Tool 3: Stripe FX Splitter
+    function runFxCalc() {
+      if (!checkDisclaimer()) return;
+      const orig = Number(document.getElementById('fxOrigAmount').value || 0);
+      const netUsd = Number(document.getElementById('fxStripePayoutUsd').value || 0);
+      const feeUsd = Number(document.getElementById('fxStripeFeeUsd').value || 0);
+      const spot = Number(document.getElementById('fxQboSpotRate').value || 1);
+
+      const qboExpectedGrossUsd = orig * spot;
+      const stripeImpliedGrossUsd = netUsd + feeUsd;
+      const fxVariance = qboExpectedGrossUsd - stripeImpliedGrossUsd;
+
+      const report = `# STRIPE MULTI-CURRENCY FX RECONCILIATION JOURNAL (LOCAL PREVIEW)
+- Foreign Gross Sales: ${orig.toFixed(2)} (at QBO Spot ${spot} = $${qboExpectedGrossUsd.toFixed(2)} USD)
+- Stripe Implied Gross USD ($${netUsd.toFixed(2)} Net + $${feeUsd.toFixed(2)} Fees): $${stripeImpliedGrossUsd.toFixed(2)} USD
+- Exact FX Realized Variance to Book: $${fxVariance.toFixed(2)} USD
+
+Account,Debit (USD),Credit (USD),Memo
+Bank Checking (Chime/Operating),${netUsd.toFixed(2)},0.00,Stripe Payout Settlement
+Stripe Processing & FX Fees,${feeUsd.toFixed(2)},0.00,Stripe Deducted Fees
+Realized FX Gain/Loss Variance,${fxVariance >= 0 ? fxVariance.toFixed(2) : '0.00'},${fxVariance < 0 ? Math.abs(fxVariance).toFixed(2) : '0.00'},Spot vs Stripe Payout FX Adjustment
+Stripe Foreign Clearing Account,0.00,${qboExpectedGrossUsd.toFixed(2)},Clear Foreign Invoice Balance`;
+      document.getElementById('outFxJournal').value = report;
+    }
+
+    // Tool 4: Stripe VAMP & Verifi RDR Ticket
+    function runVampCalc() {
+      if (!checkDisclaimer()) return;
+      const tx = Number(document.getElementById('vampMonthlyTx').value || 1);
+      const disp = Number(document.getElementById('vampCurrentDisputes').value || 0);
+      const cap = Number(document.getElementById('vampRdrCap').value || 25);
+
+      const ratio = (disp / tx) * 100;
+      const maxAllowed09 = Math.floor(tx * 0.0085); // safe 0.85% ceiling below 0.9% VAMP
+      const remainingBuffer = Math.max(0, maxAllowed09 - disp);
+
+      const ticket = `SUBJECT: Urgent Configuration Update — Verifi RDR Enrollment & Rule Thresholds
+
+Current Visa VAMP Ratio: ${ratio.toFixed(2)}% (${disp} disputes / ${tx} Visa transactions)
+Safe Manual Dispute Buffer Before 0.9% VAMP Threshold: ${remainingBuffer} additional disputes this month
+
+--- COPY & SEND VIA STRIPE WRITTEN SUPPORT TICKET ---
+Hello Stripe Risk & Disputes Team,
+
+I want to review and modify my account's Verifi Rapid Dispute Resolution (RDR) enrollment and rule configuration. Please confirm my current RDR rules and apply the following two threshold updates immediately:
+
+1. Transaction Amount Ceiling: Only auto-refund via Verifi RDR when the disputed transaction amount is strictly under $${cap.toFixed(2)} USD. Route all disputes >= $${cap.toFixed(2)} USD to manual dispute response so we can submit compelling evidence.
+2. Delivery Confirmation Exclusion: Do NOT auto-refund orders >= $${cap.toFixed(2)} USD where carrier tracking or AVS/CVV match is present on the PaymentIntent.
+
+Please reply in writing once these Verifi RDR rule thresholds are updated on our merchant profile.`;
+      document.getElementById('outVampTicket').value = ticket;
+    }
+
+    // Tool 5: UK Statutory Late Payment Interest
+    function runUkInterest() {
+      if (!checkDisclaimer()) return;
+      const amt = Number(document.getElementById('ukInvAmount').value || 0);
+      const days = Number(document.getElementById('ukDaysLate').value || 0);
+      const boe = Number(document.getElementById('ukBoeRate').value || 4.75);
+      const ref = document.getElementById('ukPoNum').value || 'INV-001';
+
+      const statutoryRate = boe + 8.0;
+      const dailyInterest = (amt * (statutoryRate / 100)) / 365;
+      const accruedInterest = dailyInterest * days;
+      const fixedComp = amt < 1000 ? 40 : (amt < 10000 ? 70 : 100);
+      const totalDue = amt + accruedInterest + fixedComp;
+
+      const notice = `TO: Accounts Payable Department (CC: Purchasing / Finance Director)
+SUBJECT: OVERDUE ACCOUNT & STATUTORY INTEREST NOTICE — ${ref}
+
+Please note that invoice ${ref} for £${amt.toFixed(2)} is now ${days} days past agreed credit terms.
+
+Under the Late Payment of Commercial Debts (Interest) Act 1998:
+- Principal Invoice Balance: £${amt.toFixed(2)}
+- Statutory Interest (${statutoryRate.toFixed(2)}% p.a. = 8% + ${boe.toFixed(2)}% BoE base for ${days} days): £${accruedInterest.toFixed(2)}
+- Statutory Fixed Debt Recovery Compensation: £${fixedComp.toFixed(2)}
+- TOTAL BALANCE NOW DUE: £${totalDue.toFixed(2)}
+
+To waive the £${(accruedInterest + fixedComp).toFixed(2)} statutory surcharge, please remit the principal £${amt.toFixed(2)} via same-day Faster Payments or the instant card payment link on the attached invoice before 16:00 GMT tomorrow.`;
+      document.getElementById('outUkNotice').value = notice;
+    }
+
+    // Tool 6: Deterministic UUIDv4 Remapper
+    function deterministicUuidV4(seedStr) {
+      let h1 = 0xdeadbeef ^ seedStr.length, h2 = 0x41c6ce57 ^ seedStr.length;
+      for (let i = 0; i < seedStr.length; i++) {
+        const ch = seedStr.charCodeAt(i);
+        h1 = Math.imul(h1 ^ ch, 2654435761);
+        h2 = Math.imul(h2 ^ ch, 1597334677);
+      }
+      h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+      h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+      const hex = (n) => (n >>> 0).toString(16).padStart(8, '0');
+      const p1 = hex(h1);
+      const p2 = hex(h2);
+      const p3 = hex(h1 ^ 0x9e3779b9);
+      const p4 = hex(h2 ^ 0x85ebca6b);
+      return `${p1}-${p2.slice(0, 4)}-4${p2.slice(5, 8)}-a${p3.slice(1, 4)}-${p3.slice(4, 8)}${p4}`;
+    }
+
+    function runUuidMap() {
+      if (!checkDisclaimer()) return;
+      const lines = document.getElementById('txtUuidIn').value.trim().split('\n');
+      if (!lines.length) return;
+      const headers = lines[0].split(',').map(s => s.trim());
+      const idCols = headers.map((h, idx) => (h === 'id' || h.endsWith('_id')) ? idx : -1).filter(i => i >= 0);
+
+      const out = [headers.join(',')];
+      lines.slice(1).forEach(line => {
+        const cols = line.split(',').map(s => s.trim());
+        idCols.forEach(idx => {
+          if (cols[idx] && !/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(cols[idx])) {
+            const colNamespace = headers[idx] === 'id' ? 'record' : headers[idx].replace(/_id$/, '');
+            cols[idx] = deterministicUuidV4(colNamespace + ':' + cols[idx]);
+          }
+        });
+        out.push(cols.join(','));
+      });
+      document.getElementById('outUuidCsv').value = out.join('\n');
+    }
+
+
+    // Tool 7: #66 Shopify 10k Reference Sharder & Handle Sanitizer
+    function runShopifySanitize() {
+      if (!checkDisclaimer()) return;
+      const lines = document.getElementById('txtShopifyIn').value.trim().split('\n');
+      if (!lines.length) return;
+      const out = [lines[0]];
+      const urlCounts = {};
+      lines.slice(1).forEach((line, idx) => {
+        const cols = line.split(',').map(s => s.trim());
+        if (cols.length >= 4) {
+          const rawFulfill = cols[1].toLowerCase().replace(/\s+/g, '-');
+          cols[1] = (rawFulfill === 'manual' || !rawFulfill) ? 'manual' : rawFulfill;
+          const rawPol = cols[2].toLowerCase();
+          cols[2] = (rawPol === 'continue' || rawPol === 'allow') ? 'continue' : 'deny';
+          const rawUrl = cols[3];
+          urlCounts[rawUrl] = (urlCounts[rawUrl] || 0) + 1;
+          const shardNum = Math.floor((urlCounts[rawUrl] - 1) / 9500) + 1;
+          const sep = rawUrl.includes('?') ? '&' : '?';
+          cols[3] = `${rawUrl}${sep}v=shard_${shardNum}_row_${idx + 1}`;
+        }
+        out.push(cols.join(','));
+      });
+      document.getElementById('outShopifyCsv').value = out.join('\n');
+    }
+
+    // Tool 8: #72 Bubble Workflow Collision Auditor & Bulk API Chunker
+    function runBubbleAudit() {
+      if (!checkDisclaimer()) return;
+      try {
+        const data = JSON.parse(document.getElementById('txtBubbleIn').value);
+        const triggers = new Set((data.database_triggers || []).map(s => s.trim()));
+        const collisions = (data.api_workflows || []).filter(w => triggers.has(w.trim()));
+        const cleanUrl = (data.webhook_url || '').replace('/version-test', '').replace(/\/initialize\/?$/, '');
+        const ndjson = (data.sample_rows || []).map(r => JSON.stringify(r)).join('\n');
+        const report = [
+          `1. NAMING COLLISION CHECK: ${collisions.length ? 'CRITICAL COLLISION ON [' + collisions.join(', ') + '] -> Rename database trigger to ' + collisions[0] + '_db_trigger to fix "Workflow not Found"' : 'PASS (0 collisions)'}`,
+          `2. PRODUCTION WEBHOOK URL: ${cleanUrl}`,
+          `3. BUBBLE BULK DATA API NDJSON PAYLOAD (Text/Plain):`,
+          ndjson
+        ].join('\n\n');
+        document.getElementById('outBubbleReport').value = report;
+      } catch (e) {
+        document.getElementById('outBubbleReport').value = 'Invalid JSON input: ' + e.message;
+      }
+    }
+
+    // Tool 9: #73 Xero-Stripe Statement Splitter & Fee Sign Inverter
+    function runXeroStripe() {
+      if (!checkDisclaimer()) return;
+      const lines = document.getElementById('txtXeroStripeIn').value.trim().split('\n');
+      const out = ['Transaction Date,Payee,Description,Transaction Amount,Reference'];
+      lines.forEach(line => {
+        const p = line.split(',').map(s => s.trim());
+        if (p.length >= 6 && p[0] !== 'Created') {
+          const [dt, email, grossStr, feeStr, txType, ref] = p;
+          const gross = Number(grossStr || 0);
+          const fee = Number(feeStr || 0);
+          out.push(`${dt},${email},Stripe ${txType} (${ref}),${gross.toFixed(2)},${ref}`);
+          const xeroFee = txType.toLowerCase() === 'refund' ? Math.abs(fee) : -Math.abs(fee);
+          out.push(`${dt},Stripe,Stripe Fee (${ref}),${xeroFee.toFixed(2)},${ref}_fee`);
+        }
+      });
+      document.getElementById('outXeroStripeCsv').value = out.join('\n');
+    }
+
+    // Tool 10: #74 HubSpot Search JSON-to-CSV Flattener
+    function runHubspotFlatten() {
+      if (!checkDisclaimer()) return;
+      try {
+        const payload = JSON.parse(document.getElementById('txtHubspotIn').value);
+        const rows = payload.results || [];
+        const seen = new Set();
+        const propKeys = Array.from(new Set(rows.flatMap(r => Object.keys(r.properties || {}))));
+        const out = [['id', ...propKeys].join(',')];
+        rows.forEach(r => {
+          if (!seen.has(r.id)) {
+            seen.add(r.id);
+            const vals = [r.id, ...propKeys.map(k => (r.properties && r.properties[k]) || '')];
+            out.push(vals.join(','));
+          }
+        });
+        document.getElementById('outHubspotCsv').value = out.join('\n');
+      } catch (e) {
+        document.getElementById('outHubspotCsv').value = 'Invalid HubSpot JSON: ' + e.message;
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.nav-tab').forEach(btn => {
+        btn.addEventListener('click', () => switchTab(btn.getAttribute('data-tab')));
+      });
+
+      document.getElementById('btnLoadSample3pl').addEventListener('click', () => {
+        loadSample3pl();
+        run3plAudit();
+        showToast('Loaded sample 3PL invoice data');
+      });
+      document.getElementById('btnRun3plAudit').addEventListener('click', () => {
+        run3plAudit();
+        showToast('3PL audit completed');
+      });
+      document.getElementById('btnCopy3pl').addEventListener('click', () => copyText(document.getElementById('out3plReport').value, '3PL Claim CSV'));
+      document.getElementById('btnDl3pl').addEventListener('click', () => downloadFile('3pl_overcharge_claim.csv', document.getElementById('out3plReport').value));
+
+      document.getElementById('btnRunQboDiff').addEventListener('click', () => {
+        runQboDiff();
+        showToast('Isolated missing QBO rows');
+      });
+      document.getElementById('btnDlQboCsv').addEventListener('click', () => downloadFile('QBO_Missing_Import.csv', document.getElementById('outQboDiff').value));
+
+      document.getElementById('btnCalcFx').addEventListener('click', () => {
+        runFxCalc();
+        showToast('Calculated FX journal');
+      });
+
+      document.getElementById('btnCalcVamp').addEventListener('click', () => {
+        runVampCalc();
+        showToast('Generated VAMP & RDR ticket');
+      });
+      document.getElementById('btnCopyVampTicket').addEventListener('click', () => copyText(document.getElementById('outVampTicket').value, 'Stripe RDR Ticket'));
+
+      document.getElementById('btnCalcUkInterest').addEventListener('click', () => {
+        runUkInterest();
+        showToast('Calculated UK statutory interest');
+      });
+
+      document.getElementById('btnRunUuidMap').addEventListener('click', () => {
+        runUuidMap();
+        showToast('Remapped CSV IDs to UUIDv4');
+      });
+      document.getElementById('btnDlUuidCsv').addEventListener('click', () => downloadFile('UUID_Cleaned.csv', document.getElementById('outUuidCsv').value));
+
+      loadSample3pl();
+      run3plAudit();
+      runQboDiff();
+      runFxCalc();
+      runVampCalc();
+      runUkInterest();
+      document.getElementById('btnRunShopifySanitize').addEventListener('click', () => { runShopifySanitize(); showToast('Shopify CSV sanitized'); });
+      document.getElementById('btnDlShopifyCsv').addEventListener('click', () => downloadFile('Shopify_Cleaned.csv', document.getElementById('outShopifyCsv').value));
+      document.getElementById('btnRunBubbleAudit').addEventListener('click', () => { runBubbleAudit(); showToast('Bubble collision audit complete'); });
+      document.getElementById('btnRunXeroStripe').addEventListener('click', () => { runXeroStripe(); showToast('Xero-Stripe statement generated'); });
+      document.getElementById('btnDlXeroStripe').addEventListener('click', () => downloadFile('Xero_Stripe_Statement.csv', document.getElementById('outXeroStripeCsv').value));
+      document.getElementById('btnRunHubspotFlatten').addEventListener('click', () => { runHubspotFlatten(); showToast('HubSpot JSON flattened to CSV'); });
+      document.getElementById('btnDlHubspotCsv').addEventListener('click', () => downloadFile('HubSpot_Contacts.csv', document.getElementById('outHubspotCsv').value));
+
+      runUuidMap();
+      runShopifySanitize();
+      runBubbleAudit();
+      runXeroStripe();
+      runHubspotFlatten();
+    });
+  </script>
+</body>
+</html>
